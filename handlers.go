@@ -42,7 +42,7 @@ func HandleSend(c *gin.Context) {
 		Content:   input.Content,
 	}
 
-	if err := forwardToDiscord(payload); err != nil {
+	if err := Send(payload); err != nil {
 		log.Printf("Forward error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Forward failed"})
 		return
@@ -51,7 +51,7 @@ func HandleSend(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "Sent"})
 }
 
-func forwardToDiscord(payload DiscordPayload) error {
+func Send(payload DiscordPayload) error {
 	url := os.Getenv("DISCORD_WEBHOOK")
 	if url == "" {
 		return fmt.Errorf("missing DISCORD_WEBHOOK")
