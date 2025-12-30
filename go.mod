@@ -1,4 +1,4 @@
-module disgord
+module github.com/SwodStudio/disgord
 
 go 1.25.5
 

@@ -1,4 +1,4 @@
-package main
+package disgord
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main() {
+func RunServer() {
 	_ = godotenv.Load()
 
 	r := gin.Default()
