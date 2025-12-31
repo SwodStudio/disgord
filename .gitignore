@@ -1,2 +1,4 @@
 .env
 disgord
+handlers_test.go
+integration_test.go

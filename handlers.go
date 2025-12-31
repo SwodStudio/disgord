@@ -12,16 +12,56 @@ import (
 )
 
 type IncomingPayload struct {
-	Source   string `json:"source" binding:"required"`
-	Content  string `json:"content" binding:"required"`
-	IconURL  string `json:"icon_url"`
-	Nickname string `json:"nickname"`
+	Source   string  `json:"source" binding:"required"`
+	Content  string  `json:"content" binding:"required"`
+	IconURL  string  `json:"icon_url"`
+	Nickname string  `json:"nickname"`
+	Embeds   []Embed `json:"embeds"`
 }
 
 type DiscordPayload struct {
-	Username  string `json:"username"`
-	AvatarURL string `json:"avatar_url"`
-	Content   string `json:"content"`
+	Username  string  `json:"username,omitempty"`
+	AvatarURL string  `json:"avatar_url,omitempty"`
+	Content   string  `json:"content,omitempty"`
+	Embeds    []Embed `json:"embeds,omitempty"`
+}
+
+// Embed
+type Embed struct {
+	Title       string          `json:"title,omitempty"`
+	Description string          `json:"description,omitempty"`
+	URL         string          `json:"url,omitempty"`
+	Color       int             `json:"color,omitempty"`
+	Footer      *EmbedFooter    `json:"footer,omitempty"`
+	Image       *EmbedImage     `json:"image,omitempty"`
+	Thumbnail   *EmbedThumbnail `json:"thumbnail,omitempty"`
+	Author      *EmbedAuthor    `json:"author,omitempty"`
+	Fields      []EmbedField    `json:"fields,omitempty"`
+}
+
+type EmbedField struct {
+	Name   string `json:"name,omitempty"`
+	Value  string `json:"value,omitempty"`
+	Inline bool   `json:"inline,omitempty"`
+}
+
+type EmbedAuthor struct {
+	Name    string `json:"name,omitempty"`
+	URL     string `json:"url,omitempty"`
+	IconURL string `json:"icon_url,omitempty"`
+}
+
+type EmbedThumbnail struct {
+	URL string `json:"url,omitempty"`
+}
+
+type EmbedImage struct {
+	URL string `json:"url,omitempty"`
+}
+
+type EmbedFooter struct {
+	Text    string `json:"text,omitempty"`
+	IconURL string `json:"icon_url,omitempty"`
 }
 
 func HandleSend(c *gin.Context) {
@@ -40,6 +80,7 @@ func HandleSend(c *gin.Context) {
 		Username:  name,
 		AvatarURL: input.IconURL,
 		Content:   input.Content,
+		Embeds:    input.Embeds,
 	}
 
 	if err := Send(payload); err != nil {
@@ -54,7 +95,7 @@ func HandleSend(c *gin.Context) {
 func Send(payload DiscordPayload) error {
 	url := os.Getenv("DISCORD_WEBHOOK")
 	if url == "" {
-		return fmt.Errorf("missing DISCORD_WEBHOOK")
+		return fmt.Errorf("DISCORD_WEBHOOK not found")
 	}
 
 	b, _ := json.Marshal(payload)
@@ -70,3 +111,4 @@ func Send(payload DiscordPayload) error {
 
 	return nil
 }
+
