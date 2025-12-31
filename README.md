@@ -86,5 +86,3 @@ disgord.Send(payload)
 ```
 
 ```
-
----
